@@ -4,6 +4,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -12,7 +13,8 @@ import java.io.IOException;
 @Component
 public class ApiKeyFilter extends OncePerRequestFilter {
 
-    private static final String API_KEY = "MY_SECRET_KEY_123";
+    @Value("${security.api-key}")
+    private String apiKeyConfig;
     private static final String HEADER_NAME = "x-api-key";
 
     @Override
@@ -33,7 +35,7 @@ public class ApiKeyFilter extends OncePerRequestFilter {
         // 🔥 2️⃣ Apply API key check for your protected APIs
         String apiKey = request.getHeader(HEADER_NAME);
 
-        if (apiKey == null || !apiKey.equals(API_KEY)) {
+        if (apiKey == null || !apiKey.equals(apiKeyConfig)) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.getWriter().write("Invalid API Key");
             return;

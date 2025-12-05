@@ -17,4 +17,5 @@ public class ValidationResponse {
     private boolean disposable;
     private String suggestion;  // gmial → gmail
     private String reason;
+    private int score;
 }

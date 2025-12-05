@@ -21,9 +21,11 @@ public class EmailValidationServiceImpl implements EmailValidationService {
         boolean disposable = DisposableEmailUtil.isDisposable(email);
 
         boolean smtp = false;
-        if(mx) {
+        if (mx) {
             smtp = SmtpUtil.checkSmtp(email);
         }
+
+        int score = calculateScore(syntax, mx, smtp, disposable);
 
         return ValidationResponse.builder()
                 .email(email)
@@ -31,6 +33,7 @@ public class EmailValidationServiceImpl implements EmailValidationService {
                 .validMx(mx)
                 .smtpConnectivity(smtp)
                 .disposable(disposable)
+                .score(score)
                 .suggestion(getSuggestion(email))
                 .reason(getReason(syntax, mx, smtp, disposable))
                 .build();
@@ -47,5 +50,17 @@ public class EmailValidationServiceImpl implements EmailValidationService {
         if(disposable) return "Disposable email detected";
         if(!smtp) return "SMTP not reachable";
         return "Valid email";
+    }
+
+    private int calculateScore(boolean syntax, boolean mx, boolean smtp, boolean disposable) {
+        int score = 100;
+
+        if (!syntax) score -= 50;
+        if (!mx) score -= 30;
+        if (!smtp) score -= 20;
+        if (disposable) score -= 40;
+
+        if (score < 0) score = 0;
+        return score;
     }
 }
