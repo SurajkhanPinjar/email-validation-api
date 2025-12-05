@@ -8,3 +8,7 @@ docker build -t email-api .
 docker build -t email-api .
 docker run -p 8081:8081 email-api
 --------------------------
+
+
+
+https://email-validation-api-production-02d9.up.railway.app/api/validate?email=gg@mm.com
