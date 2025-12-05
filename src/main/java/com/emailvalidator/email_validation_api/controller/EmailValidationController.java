@@ -3,6 +3,7 @@ package com.emailvalidator.email_validation_api.controller;
 import com.emailvalidator.email_validation_api.model.ValidationResponse;
 import com.emailvalidator.email_validation_api.service.EmailValidationService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,7 +20,8 @@ public class EmailValidationController {
 
     @Operation(
             summary = "Validate Email",
-            description = "Validates syntax, MX record, SMTP connectivity, and disposable email check."
+            description = "Validates MX, SMTP, Syntax, Disposable",
+            security = @SecurityRequirement(name = "apiKeyAuth")  // Swagger enforces key
     )
     @GetMapping("/validate")
     public ResponseEntity<ValidationResponse> validate(@RequestParam String email) {
