@@ -12,10 +12,13 @@ import lombok.NoArgsConstructor;
 public class ValidationResponse {
     private String email;
     private boolean validSyntax;
+    private String username;
+    private String domain;
     private boolean validMx;
     private boolean smtpConnectivity;
     private boolean disposable;
     private String suggestion;  // gmial → gmail
     private String reason;
     private int score;
+    private boolean freeProvider;
 }

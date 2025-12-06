@@ -8,8 +8,16 @@ import com.emailvalidator.email_validation_api.util.SmtpUtil;
 import org.apache.commons.validator.routines.EmailValidator;
 import org.springframework.stereotype.Service;
 
+import java.util.Set;
+
 @Service
 public class EmailValidationServiceImpl implements EmailValidationService {
+
+    private static final Set<String> FREE_PROVIDERS = Set.of(
+            "gmail.com", "yahoo.com", "outlook.com", "hotmail.com",
+            "live.com", "aol.com", "icloud.com", "proton.me",
+            "protonmail.com", "yandex.com", "zoho.com", "mail.com"
+    );
 
     @Override
     public ValidationResponse validateEmail(String email) {
@@ -25,16 +33,27 @@ public class EmailValidationServiceImpl implements EmailValidationService {
             smtp = SmtpUtil.checkSmtp(email);
         }
 
+        String[] parts = email.split("@");
+
+        String username = parts[0];
+        String domain = parts.length > 1 ? parts[1] : "";
+
+        boolean freeProvider = FREE_PROVIDERS.contains(domain.toLowerCase());
+
         int score = calculateScore(syntax, mx, smtp, disposable);
+
 
         return ValidationResponse.builder()
                 .email(email)
                 .validSyntax(syntax)
+                .username(username)
+                .domain(domain)
                 .validMx(mx)
                 .smtpConnectivity(smtp)
                 .disposable(disposable)
                 .score(score)
                 .suggestion(getSuggestion(email))
+                .freeProvider(freeProvider)
                 .reason(getReason(syntax, mx, smtp, disposable))
                 .build();
     }
