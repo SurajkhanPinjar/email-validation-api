@@ -27,7 +27,7 @@ public class ApiKeyFilter extends OncePerRequestFilter {
         String path = request.getRequestURI();
 
         // 🔥 1️⃣ Allow Swagger & API docs BEFORE checking API key
-        if (path.contains("swagger") || path.contains("api-docs")) {
+        if (path.equals("/ping") || path.contains("swagger") || path.contains("api-docs")) {
             filterChain.doFilter(request, response);
             return;
         }
