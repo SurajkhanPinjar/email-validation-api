@@ -6,9 +6,33 @@ spring:
   application:
     name: email-validation-api
 
+# ============================
+# 🔐 API KEY SECURITY CONFIG
+# ============================
 security:
-  api-key: ${INTERNAL_API_KEY:MY_SECRET_KEY_123}
+  api:
+    enabled: true
+    key: ${INTERNAL_API_KEY:MY_SECRET_KEY_123}   # ENV override > fallback for local
 
+# ============================
+# 🧠 LOGGING
+# ============================
+logging:
+  level:
+    root: INFO          # Default logging level
+    com.api: DEBUG      # Enable detailed logs for your API package
+    org.springframework.web: INFO
+    org.hibernate.SQL: WARN
 
-
-
+# ============================
+# 📘 SWAGGER UI CUSTOM CONFIG
+# ============================
+springdoc:
+  api-docs:
+    enabled: true
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui
+    operations-sorter: method
+    tags-sorter: alpha
+    display-request-duration: true
